@@ -129,7 +129,8 @@ async function playSentenceAudio(chunks) {
 let ws = null;
 
 function connectWS() {
-  ws = new WebSocket(`ws://${location.host}/ws`);
+  const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(`${wsProtocol}//${location.host}/ws`);
   ws.addEventListener('message', (e) => {
     let msg;
     try {
