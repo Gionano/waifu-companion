@@ -12,19 +12,21 @@ import { applyArmSway, applyTalkingGesture } from './armGesture.js';
 const canvas = document.getElementById('app');
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x1a1a2e);
+// Hapus background supaya transparan (alpha: true)
+// scene.background = new THREE.Color(0x1a1a2e);
 
 const camera = new THREE.PerspectiveCamera(
   30,
-  window.innerWidth / window.innerHeight,
+  canvas.clientWidth / canvas.clientHeight,
   0.1,
   20,
 );
 // Sekitar tinggi dada/wajah avatar, sedikit mundur biar full body kelihatan.
 camera.position.set(0, 1.3, 2.5);
 
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+// false = jangan set inline width/height di canvas, biarkan CSS yang atur
+renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
@@ -144,8 +146,25 @@ document.querySelectorAll('#debug-panel button').forEach((btn) => {
 const clock = new THREE.Clock();
 let elapsed = 0; // waktu terakumulasi untuk osilasi napas
 
+function resizeRendererToDisplaySize(renderer) {
+  const canvas = renderer.domElement;
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
+  const needResize = canvas.width !== width || canvas.height !== height;
+  if (needResize) {
+    renderer.setSize(width, height, false);
+  }
+  return needResize;
+}
+
 function animate() {
   requestAnimationFrame(animate);
+
+  if (resizeRendererToDisplaySize(renderer)) {
+    const canvas = renderer.domElement;
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+  }
 
   const delta = clock.getDelta();
   elapsed += delta;
@@ -182,10 +201,5 @@ function animate() {
 animate();
 
 // ---------------------------------------------------------------------------
-// Resize handling
+// Resize handling (sekarang dihandle otomatis oleh resizeRendererToDisplaySize di dalam animate())
 // ---------------------------------------------------------------------------
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
