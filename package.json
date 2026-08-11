@@ -1,5 +1,6 @@
 {
   "name": "waifu-vrm-starter",
+  "description": "Waifu AI companion - 3D VRM rendering with Three.js, STT, LLM, and TTS integration",
   "private": true,
   "version": "0.1.0",
   "type": "module",

@@ -50,6 +50,15 @@ npm run dev       # Vite di :5173 (proxy /api -> :8787)
 
 Lalu buka URL yang ditampilkan Vite (biasanya `http://localhost:5173`).
 
+### Menggunakan Docker
+
+Bila tidak ingin menginstall Node.js di sistem, Anda bisa langsung menjalankan keseluruhan aplikasi (Server + Frontend) dalam *container* menggunakan Docker Compose:
+
+```bash
+docker-compose up --build
+```
+Aplikasi akan otomatis berjalan dan dapat diakses melalui `http://localhost:5173`. Perubahan pada *source code* akan langsung ter-sinkronisasi (*hot-reload* aktif) karena konfigurasi volume telah disetup.
+
 > **Kenapa ada server?** Semua API key (`NINEINFERENCE_API_KEY`, `GROQ_API_KEY`,
 > `FISH_API_KEY`) cuma boleh hidup di sisi server. Browser memanggil `/api/*` &
 > `/ws`; Vite mem-proxy-nya ke Node server yang memegang key. Key tidak pernah
