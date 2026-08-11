@@ -65,6 +65,39 @@
         z-index: 10;
       }
 
+      #camera-switch-btn {
+        display: none; /* Sembunyikan di desktop */
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        background: rgba(20, 20, 35, 0.82);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        color: #e8e8f0;
+        backdrop-filter: blur(6px);
+        z-index: 10;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.2s ease;
+        align-items: center;
+        justify-content: center;
+      }
+      #camera-switch-btn:active {
+        transform: scale(0.9);
+        background: #3a3a5c;
+      }
+      #camera-switch-btn svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .camera-loading {
+        filter: blur(10px) brightness(0.5);
+        transition: filter 0.3s ease;
+      }
+
+
       #companion-panel {
         position: fixed;
         top: 16px;
@@ -161,6 +194,9 @@
         #debug-panel {
           display: none;
         }
+        #camera-switch-btn {
+          display: flex; /* Munculkan di mobile */
+        }
       }
     </style>
   </head>
@@ -175,6 +211,17 @@
       <button data-expression="blink">Blink</button>
       <button data-expression="neutral">Reset / Neutral</button>
     </div>
+
+    <!-- Tombol Switch Kamera Khusus Mobile -->
+    <button id="camera-switch-btn" title="Ganti Kamera">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-switch-camera">
+        <path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/>
+        <path d="M13 5h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5"/>
+        <circle cx="12" cy="12" r="3"/>
+        <path d="m18 22-3-3 3-3"/>
+        <path d="m6 2 3 3-3 3"/>
+      </svg>
+    </button>
 
     <div id="companion-panel">
       <div class="panel-head">

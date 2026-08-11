@@ -31,14 +31,45 @@ function setMicStatus(live, label) {
   micLabelEl.textContent = label;
 }
 
-async function initWebcam() {
+let currentFacingMode = 'user';
+
+async function initWebcam(facingMode = 'user') {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    // Hentikan stream lama jika ada
+    if (video.srcObject) {
+      video.srcObject.getTracks().forEach(track => track.stop());
+    }
+    
+    video.classList.add('camera-loading');
+    
+    const stream = await navigator.mediaDevices.getUserMedia({ 
+      video: { facingMode: { ideal: facingMode } } 
+    });
+    
     video.srcObject = stream;
     await video.play();
+    currentFacingMode = facingMode; // Simpan mode yang aktif jika sukses
   } catch (err) {
     log(`Webcam gagal: ${err.message}`, 'error');
+    // Fallback: coba kembali ke mode sebelumnya jika pergantian gagal
+    if (facingMode !== currentFacingMode) {
+      log(`Mencoba kembali ke kamera sebelumnya...`, 'error');
+      initWebcam(currentFacingMode);
+    }
+  } finally {
+    video.classList.remove('camera-loading');
   }
+}
+
+async function toggleCamera() {
+  const newMode = currentFacingMode === 'user' ? 'environment' : 'user';
+  await initWebcam(newMode);
+}
+
+// Pasang event listener ke tombol switch
+const switchBtn = document.getElementById('camera-switch-btn');
+if (switchBtn) {
+  switchBtn.addEventListener('click', toggleCamera);
 }
 
 function captureFrame() {
